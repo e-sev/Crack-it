@@ -1,0 +1,6 @@
+# Mac OS X ds store data
+*.DS_Store
+
+# some C stuff: 
+*.o
+*.1
