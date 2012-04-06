@@ -23,9 +23,9 @@
 
 static const char *const usage = "\
 Usage:\n\
-md5main -t				# run the self-test (A.5 of RFC 1321)\n\
-md5main -c				# start calculation \n\
-md5main -tv				# print the T values \n\
+md5cracker -t				# run the self-test (A.5 of RFC 1321)\n\
+md5cracker -c				# start calculation \n\
+md5cracker -tv				# print the T values \n\
 ";
 
 static const char *const version = "2002-04-13";
@@ -76,9 +76,8 @@ do_test(void)
 void calculateMD5(char* koord) {
 	
 	static const char *const sollHash[3] = {
-		"d614e8685f8ca15629a2a6f8faae10ee", // N50°37.???' E006°56.???'
-		"D614E8685F8CA15629A2A6F8FAAE10EE", // N50°37.???' E006°56.???'
-		"c81054589e8a05a5845fe66df9e8683f"  // N50°37.980' E006°56.980'
+		"ff7375a74ff7ea8493f907fe3983f580",  // N50°37.???' E006°56.???'
+		"58dec98abf0dbb8079c76ed2bea04cf6"   // N50°37.000' E006°56.000'
 	};
 	
 		// Zum gegenprüfen des gefundenen Hashs:
@@ -99,7 +98,7 @@ void calculateMD5(char* koord) {
 		sprintf(hex_output + di * 2, "%02x", digest[di]);
 	}
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 		if (strcmp(hex_output, sollHash[i]) == 0) {
 			strncat(md5Test, md5Anfang, strlen(md5Anfang));
 			strncat(md5Test, koord, strlen(koord));
