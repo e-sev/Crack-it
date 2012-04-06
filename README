@@ -1,0 +1,4 @@
+This program cracks an MD5 Hash where most of the characters are given and the hash is known. 
+
+Don't expect to much: It is only roughly implemented and the whole hash stuff is hard coded. 
+
