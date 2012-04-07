@@ -73,12 +73,13 @@ do_test(void)
 
 //////////////////////////////////////////////////////////////
 /* Run the self-test. */
-void calculateMD5(char* koord) {
+void calculateMD5(char* koord, char* sollHash) {
 	
+	/*
 	static const char *const sollHash[3] = {
 		"ff7375a74ff7ea8493f907fe3983f580",  // N50°37.???' E006°56.???'
 		"58dec98abf0dbb8079c76ed2bea04cf6"   // N50°37.000' E006°56.000'
-	};
+	}; */
 	
 		// Zum gegenprüfen des gefundenen Hashs:
 	char md5Test[35];
@@ -97,27 +98,25 @@ void calculateMD5(char* koord) {
 	for (di = 0; di < 16; ++di) {
 		sprintf(hex_output + di * 2, "%02x", digest[di]);
 	}
-
-	for (int i = 0; i < 2; i++) {
-		if (strcmp(hex_output, sollHash[i]) == 0) {
-			strncat(md5Test, md5Anfang, strlen(md5Anfang));
-			strncat(md5Test, koord, strlen(koord));
-			strncat(md5Test, md5Abschluss, strlen(md5Abschluss));
+	
+	if (strcmp(hex_output, sollHash) == 0) {
+		strncat(md5Test, md5Anfang, strlen(md5Anfang));
+		strncat(md5Test, koord, strlen(koord));
+		strncat(md5Test, md5Abschluss, strlen(md5Abschluss));
 			
-			printf("gefundene Koordinaten %s  :-)\n", koord);
-			printf("MD5 (\"%s\") = ", koord);
-			puts(hex_output);
-			system(md5Test);
+		printf("\ngefundene Koordinaten %s  :-)\n", koord);
+		printf("MD5 (\"%s\") = ", koord);
+		puts(hex_output);
+		system(md5Test);
 			
-			strcpy(md5Test, "");
-		}
+		strcpy(md5Test, "");
 	}
 
 	strcpy(koord, "");
 	strcpy(hex_output, "");
 }  
 
-void startCalculation() {
+void startCalculation(char* knownHash) {
 	// N50°36.nnn' E006°57.nnn'
 	//        ^^^          ^^^
 
@@ -155,7 +154,7 @@ void startCalculation() {
 							strncat(koordinaten, k_teil3, strlen(k_teil3));
 							
 								// MD5 Hash berechnen:
-							calculateMD5(koordinaten);
+							calculateMD5(koordinaten, knownHash);
 						}
 					}
 				}
@@ -194,13 +193,17 @@ do_t_values(void)
 
 /* Main program */
 int main(int argc, char *argv[]) {
+	if (argc == 1) {
+		puts(usage);
+	}
     if (argc == 2) {
 		if (!strcmp(argv[1], "-t")) {
 			return do_test();
-		}
+		} 
 		
 		if (!strcmp(argv[1], "-c")) {
-			startCalculation();
+			printf("No Hash given!\n");
+			printf("Use this form: ");
 		}
 		
 		if (!strcmp(argv[1], "-h")) {
@@ -211,6 +214,11 @@ int main(int argc, char *argv[]) {
 			return do_t_values();
 		}
     }
-		//puts(usage);
+	if (argc == 3) {
+		if (!strcmp(argv[1], "-c")) {
+			startCalculation(argv[2]);
+		}
+	}
+	
     return 0;
 }
